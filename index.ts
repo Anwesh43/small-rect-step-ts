@@ -4,6 +4,7 @@ const parts : number = 4
 const scGap : number = 0.02 / parts 
 const sizeFactor : number = 9.2 
 const steps : number = 4 
+const strokeFactor : number = 90 
 const colors : Array<string> = [
     "#673AB7",
     "#f44336",
@@ -25,5 +26,44 @@ class ScaleUtil {
 
     static sinify(scale : number) : number {
         return Math.sin(scale * Math.PI)
+    }
+}
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawSmallRectSteps(context : CanvasRenderingContext2D, scale : number) {
+        const sc1 : number = ScaleUtil.divideScale(scale, 0, parts)
+        const sc2 : number = ScaleUtil.divideScale(scale, 1, parts)
+        const sc3 : number = ScaleUtil.divideScale(scale, 2, parts)
+        const gap : number = Math.min(w, h) / sizeFactor 
+        const size : number = gap * steps 
+        context.save()
+        context.translate(w / 2 + gap / 2, h / 2 + size  / 2)
+        DrawingUtil.drawLine(context, 0, -size * sc3, 0, -size * sc1)
+        for (var j = 0; j < steps; j++) {
+            const sc2f : number = ScaleUtil.sinify(sc2)
+            const sc2f1 : number = ScaleUtil.divideScale(sc2f, 0, 2)
+            const sc2f2 : number = ScaleUtil.divideScale(sc2f, 1, 2)
+            context.save()
+            context.translate(0, -gap * j)
+            DrawingUtil.drawLine(context, -gap * sc2f1, 0, 0, 0)
+            context.fillRect(-gap, -gap * sc2f2, gap, gap * sc2f2)
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawSRSNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.fillStyle = colors[i]
+        context.strokeStyle = colors[i]
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
     }
 }
