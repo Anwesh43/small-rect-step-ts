@@ -209,3 +209,25 @@ class SmallRectStep {
         })
     }
 }
+
+class Renderer {
+
+    srs : SmallRectStep = new SmallRectStep()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.srs.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.srs.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.srs.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
