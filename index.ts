@@ -1,6 +1,6 @@
 const w : number = window.innerWidth
 const h : number = window.innerHeight 
-const parts : number = 4 
+const parts : number = 3
 const scGap : number = 0.02 / parts 
 const sizeFactor : number = 9.2 
 const steps : number = 4 
@@ -66,6 +66,7 @@ class DrawingUtil {
         context.strokeStyle = colors[i]
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / strokeFactor 
+        DrawingUtil.drawSmallRectSteps(context, scale)
     }
 }
 
